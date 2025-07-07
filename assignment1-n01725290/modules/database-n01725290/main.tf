@@ -1,25 +1,28 @@
-resource "azurerm_postgresql_server" "this" {
-  name                = var.db_name
-  location            = var.location
-  resource_group_name = var.rg_name
-  administrator_login = var.admin_username
-  administrator_login_password = var.admin_password
-  version             = "11"
+resource "azurerm_postgresql_flexible_server" "this" {
+  name                   = var.db_name
+  location               = var.location
+  resource_group_name    = var.rg_name
+  administrator_login    = var.admin_username
+  administrator_password = var.admin_password
+  version                = "13"
 
-  sku_name   = "B_Gen5_1"
-  storage_mb = 5120
-  backup_retention_days        = 7
-  geo_redundant_backup_enabled = false
-  auto_grow_enabled            = true
-  ssl_enforcement_enabled      = true
+  storage_mb             = 32768
+  sku_name               = "GP_Standard_D2s_v3"
+  zone                   = "1"
 
+  backup_retention_days  = 7
+  delegated_subnet_id    = null
   public_network_access_enabled = true
+
+  lifecycle {
+    ignore_changes = [zone]
+  }
 }
 
-resource "azurerm_postgresql_database" "this" {
-  name                = "appdb"
-  resource_group_name = var.rg_name
-  server_name         = azurerm_postgresql_server.this.name
-  charset             = "UTF8"
-  collation           = "English_United States.1252"
+resource "azurerm_postgresql_flexible_server_database" "this" {
+  name      = "appdb"
+  server_id = azurerm_postgresql_flexible_server.this.id
+  collation = "en_US.utf8"
+  charset   = "UTF8"
 }
+

@@ -35,7 +35,7 @@ resource "azurerm_linux_virtual_machine" "this" {
   name                            = each.key
   resource_group_name             = var.rg_name
   location                        = var.location
-  size                            = "Standard_B1ms"
+  size                            = "Standard_D2s_v3"
   admin_username                  = var.admin_username
   admin_password                  = var.admin_password
   network_interface_ids           = [azurerm_network_interface.this[each.key].id]
@@ -58,31 +58,6 @@ resource "azurerm_linux_virtual_machine" "this" {
   boot_diagnostics {
     storage_account_uri = var.storage_account_uri
   }
-
-  extension {
-    name                 = "NetworkWatcherAgentLinux"
-    publisher            = "Microsoft.Azure.NetworkWatcher"
-    type                 = "NetworkWatcherAgentLinux"
-    type_handler_version = "1.0"
-  }
-
-  extension {
-    name                 = "AzureMonitorLinuxAgent"
-    publisher            = "Microsoft.Azure.Monitor"
-    type                 = "AzureMonitorLinuxAgent"
-    type_handler_version = "1.0"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "hostname"
-    ]
-
-    connection {
-      type     = "ssh"
-      user     = var.admin_username
-      password = var.admin_password
-      host     = azurerm_public_ip.this[each.key].ip_address
+ 
     }
-  }
-}
+  

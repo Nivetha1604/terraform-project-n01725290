@@ -1,5 +1,5 @@
 resource "azurerm_managed_disk" "this" {
-  count               = length(var.vm_ids) * 4
+  count               = length(var.vm_ids) * 2
   name                = "datadisk-${count.index}"
   location            = var.location
   resource_group_name = var.rg_name
@@ -9,7 +9,7 @@ resource "azurerm_managed_disk" "this" {
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "this" {
-  count              = length(var.vm_ids) * 4
+  count              = length(var.vm_ids) * 2
   managed_disk_id    = azurerm_managed_disk.this[count.index].id
   virtual_machine_id = element(var.vm_ids, floor(count.index / 4))
   lun                = count.index % 4

@@ -35,7 +35,7 @@ resource "azurerm_windows_virtual_machine" "this" {
   name                  = "winvm-${count.index}"
   resource_group_name   = var.rg_name
   location              = var.location
-  size                  = "Standard_B1ms"
+  size                  = "Standard_D2s_v3"
   admin_username        = var.admin_username
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.this[count.index].id]
@@ -61,16 +61,4 @@ resource "azurerm_windows_virtual_machine" "this" {
   provision_vm_agent = true
 
 
-  extension {
-    name                 = "IaaSAntimalware"
-    publisher            = "Microsoft.Azure.Security"
-    type                 = "IaaSAntimalware"
-    type_handler_version = "1.5"
-    settings             = <<SETTINGS
-{
-  "AntimalwareEnabled": true,
-  "RealtimeProtectionEnabled": true
-}
-SETTINGS
-  }
 }

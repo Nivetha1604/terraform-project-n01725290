@@ -20,13 +20,11 @@ resource "azurerm_lb" "this" {
 
 resource "azurerm_lb_backend_address_pool" "this" {
   name                = "BackendPool"
-  resource_group_name = var.rg_name
   loadbalancer_id     = azurerm_lb.this.id
 }
 
 resource "azurerm_lb_probe" "this" {
   name                = "http-probe"
-  resource_group_name = var.rg_name
   loadbalancer_id     = azurerm_lb.this.id
   protocol            = "Http"
   port                = 80
@@ -36,13 +34,12 @@ resource "azurerm_lb_probe" "this" {
 }
 resource "azurerm_lb_rule" "this" {
   name                           = "http-rule"
-  resource_group_name            = var.rg_name
   loadbalancer_id                = azurerm_lb.this.id
   protocol                       = "Tcp"
   frontend_port                  = 80
   backend_port                   = 80
   frontend_ip_configuration_name = "PublicFrontEnd"
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.this.id
+  backend_address_pool_ids        = [azurerm_lb_backend_address_pool.this.id]
   probe_id                       = azurerm_lb_probe.this.id
 }
 
