@@ -17,3 +17,7 @@ output "windows_vm_public_ips" {
   description = "Public IPs of the Windows VMs"
   value       = [for pip in azurerm_public_ip.this : pip.ip_address]
 }
+output "windows_vm_ids" {
+  description = "IDs of the Windows VMs"
+  value       = [for vm in azurerm_windows_virtual_machine.this : vm.id]
+}

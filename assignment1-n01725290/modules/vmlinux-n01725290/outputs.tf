@@ -17,3 +17,11 @@ output "linux_vm_public_ips" {
   description = "Public IPs of the Linux VMs"
   value       = [for pip in azurerm_public_ip.this : pip.ip_address]
 }
+output "linux_vm_ids" {
+  description = "IDs of the Linux VMs"
+  value       = [for vm in azurerm_linux_virtual_machine.this : vm.id]
+}
+output "linux_vm_nic_ids" {
+  description = "NIC IDs for Linux VMs"
+  value       = [for nic in azurerm_network_interface.this : nic.id]
+}
